@@ -14,7 +14,6 @@ const userSchema = new Schema(
             type: String,
             unique: true,
             required: 'Email required',
-            validate: [validateEmail, 'Please fill a valid email address'],
             match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'],
         },
         thoughts: [
@@ -30,11 +29,15 @@ const userSchema = new Schema(
             }
         ],
     },
+    {
+        toJSON: {
+          virtuals: true,
+        },
+        id: false,
+      }
 );
 
-userSchema
-    .virtual('friendCount')
-    .get(function () {
+userSchema.virtual('friendCount').get(function() {
         return this.friends.length;
     });
 

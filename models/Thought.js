@@ -12,20 +12,25 @@ const thoughtSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            get: new Date(),
+            // get: new Date(),
         },
         username: {
             type: String,
             required: 'No opinions without an owner',
         },
-        reactions: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'reactionSchema',
-            }
-        ],
-    }
-)
+        reactions: [Reaction],
+    },
+    {
+        toJSON: {
+          virtuals: true,
+        },
+        id: false,
+      }
+);
+
+thoughtSchema.virtual('reactionCount').get(function() {
+        return this.reactions.length;
+    });
 
 const Thought = model('thought', thoughtSchema);
 
